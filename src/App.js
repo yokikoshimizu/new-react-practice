@@ -8,25 +8,55 @@ function App() {
   //値を更新するときはsetter関数を使って更新
   // const todos =[] ←このようなjsの書き方だと、React上では再描画が行われない
   const [todos, setTodos] = useState([])
+  const [text, setText] = useState("");
 
-  const addTodo = () => {
-    const newTodos = [...todos]
-    newTodos.push(1)
-    setTodos(newTodos)
-    console.log(todos)
-  }
+  // const addTodo = () => {
+  //   const newTodos = [...todos]
+  //   newTodos.push({
+  //     id: 1,
+  //     title: 'title',
+  //     //↓フラグ系のプロパティにはtrue,falseが妥当
+  //     isDone: false
+  //   })
+  //   setTodos(newTodos)
+  //   console.log(todos)
+  // }
+
+console.log('todos', todos)
 
   return (
-    <div>
-      {todos.map((todo,index) => {
+    <>
+      Title: <input value={text} onChange={(e) => setText(e.target.value)} />
+      {todos.map((todo) => {
         return (
-          <div>
-            {todo}
+          <div
+            key={todo.id}
+            style={{ backgroundColor: todo.isDone === true ? "gray" : "white" }}
+          >
+            {todo.title}
+            <button
+              onClick={() => {
+                const newTodos = todos.map((v) =>
+                  v.id === todo.id ? { ...v, isDone: true } : v
+                );
+                setTodos(newTodos);
+              }}
+            >
+              完了
+            </button>
           </div>
-        )
+        );
       })}
-      <button onClick={addTodo}>ToDo追加</button>
-    </div>
+      <button
+        onClick={() => {
+          const newTodos = [...todos];
+          newTodos.push({ id: todos.length + 1, title: text, isDone: false });
+          setTodos(newTodos);
+        }}
+      >
+        追加
+      </button>
+    </>
   );
 }
 
